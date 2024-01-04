@@ -1,7 +1,9 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .serializers import TaskSerializer
+from rest_framework.renderers import JSONRenderer
+from .serializers import TaskSerializer,my_view
 from .models import Task
+from django.shortcuts import render, redirect
 """
 API Overview
 """
@@ -21,8 +23,9 @@ Below Function going to display all the tasks store in the data base.
 @api_view(['GET'])
 def taskList(request):
     tasks = Task.objects.all()
-    serializer = TaskSerializer(tasks, many = True)
-    return Response(serializer.data)
+    data=my_view(tasks)
+    context={"data":data}
+    return render(request,"userpage/tasklist.html", context)
 """
 This Function going to display Detailed view of one perticuler task with the help of pk.
 """
